@@ -85,13 +85,13 @@ npm run db:migration:up
 
 ### Trying out the backend
 Run `npm start` and open your graphql console at `http://localhost:5001/playground` so you can try out the backend there.
-To be able to use authentication via cookies, set "request.credentials" to "include" in playground console settings.
+To be able to use automatic authentication via cookies, set "request.credentials" to "include" in playground console settings.
 
-When application is run for the first time, administrator user `admin@coreline.hr` is created.
+When application is run for the first time, administrator user `admin@mycompany.com` is created.
 You can login by going to `http://localhost:5001/playground` and executing this mutation:
 ```
 mutation {
-  emailLogin(email: "admin@coreline.hr", password: "password") {
+  emailLogin(email: "admin@mycompany.com", password: "password") {
     token
   }
 }

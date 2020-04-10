@@ -17,22 +17,22 @@ const randomPort = () => Math.floor((Math.random() * 58000) + 1100);
   } catch (e) {
     let templateEnv = readFileSync('template.env', 'utf8');
     let dockerCompose = readFileSync('docker-compose.yml', 'utf8');
-    if (templateEnv.includes('coreline-template')) {
+    if (templateEnv.includes('ikatun-template')) {
       const name = trim(await rlp.questionAsync('Docker database/machine/service name? '));
       if (!name) {
         throw new Error('Name must not be empty');
       }
       const port = randomPort().toString(10);
       templateEnv = templateEnv
-        .replace(/coreline-template/g, name)
+        .replace(/ikatun-template/g, name)
         .replace(/5402/g, port);
 
       dockerCompose = dockerCompose
-        .replace(/coreline-template/g, name)
+        .replace(/ikatun-template/g, name)
         .replace(/5402/g, port);
 
       let packageJson = readFileSync('package.json', 'utf8');
-      packageJson = packageJson.replace('5402/coreline-template', `${port}/${name}`);
+      packageJson = packageJson.replace('5402/ikatun-template', `${port}/${name}`);
 
       console.log('Setting up database for port', port);
       writeFileSync('template.env', templateEnv, { encoding: 'utf8' });

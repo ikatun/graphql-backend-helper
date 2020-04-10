@@ -1,5 +1,5 @@
 {
-  "name": "@coreline/graphql-ts-helper",
+  "name": "graphql-ts-helper",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -13,8 +13,8 @@
     "db:migration:generate": "npm run build && ts-node scripts/generate-migration",
     "db:migration:up": "typeorm migration:run",
     "db:start": "docker-compose -f docker-compose.yml up -d",
-    "db:stop": "docker container stop coreline-template",
-    "psql": "psql postgresql://user:1234@localhost:41888/coreline-template"
+    "db:stop": "docker container stop ikatun-template",
+    "psql": "psql postgresql://user:1234@localhost:5402/ikatun-template"
   },
   "keywords": [],
   "author": "",
