@@ -4,7 +4,6 @@ import { Field, ID, ObjectType } from 'type-graphql';
 import { Column, JoinColumn, Entity, OneToOne, ManyToOne, OneToMany, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 import { User } from '../../user/models/User';
-import { Post } from '../../post/models/Post';
 
 import * as auth from '../../authorization/auth-checkers';
 import { FileCreateInput } from '../inputs/FileCreateInput';
@@ -18,7 +17,7 @@ import { getInputOperationType } from '../../shared/get-input-operation-type';
 import { noChange } from '../../shared/no-change';
 import { asPromise } from '../../shared/as-promise';
 
-import { updateUserRelation,updatePostRelation } from './update-operations/file-update-operations';
+import { updateUserRelation } from './update-operations/file-update-operations';
 
 // <keep-imports>
 // </keep-imports>
@@ -48,10 +47,6 @@ export class File implements IAuthorizable {
   })
   public slug: string;
 
-  @ManyToOne(() => Post, (post) => post.images , {"nullable":true,"onDelete":"SET NULL"})
-  @Field(() => Post , {"nullable":true})
-  public post: Promise<Post | undefined | null>;
-
   @OneToOne(() => User, (user) => user.profileImage , {"nullable":true,"onDelete":"SET NULL"})
   @Field(() => User , {"nullable":true})
   @JoinColumn()
@@ -66,7 +61,7 @@ export class File implements IAuthorizable {
   updatedAt: Date;
 
   public async update(input: FileCreateInput | FileEditInput | FileNestedInput, context: IRequestContext) {
-    const { post, user, ...data } = input;
+    const { user, ...data } = input;
     if (noChange(input)) {
       return this;
     }
@@ -74,8 +69,6 @@ export class File implements IAuthorizable {
       await auth.assertCanUpdate(this, context);
     }
     Object.assign(this, data);
-
-    await updatePostRelation(this, post, context);
 
     await updateUserRelation(this, user, context);
 

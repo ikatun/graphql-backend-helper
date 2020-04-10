@@ -9,16 +9,16 @@ export class FileAuth implements IAuthorizationChecker {
   }
 
   public async canRead(ctx: IRequestContext, field?: string) {
-    return true;
+    return !!ctx.user;
   }
 
   public async canManage(ctx: IRequestContext) {
-    const { auth } = ctx;
-    if (!auth) {
+    const { user } = ctx;
+    if (!user) {
       return false;
     }
 
-    if (auth.user.role === UserRole.ADMIN) {
+    if (user.role === UserRole.ADMIN) {
       return true;
     }
 

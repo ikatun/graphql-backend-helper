@@ -25,6 +25,7 @@ export async function assertCanRead<T extends IAuthorizable>(
   ctx: IRequestContext,
   fieldName?: string) {
   if (!await canRead(entity, ctx, fieldName)) {
+    console.log('cannot read', entity);
     throw new UnauthorizedError();
   }
 
@@ -37,6 +38,7 @@ export async function assertCanPersist<T extends IAuthorizable>(entity: T, ctx: 
   }
 
   if (!await entity.authorizationChecker.canPersist(ctx)) {
+    console.log('cannot persist', entity);
     throw new UnauthorizedError();
   }
 
@@ -49,7 +51,7 @@ export async function assertCanUpdate<T extends IAuthorizable>(entity: T, ctx: I
   }
 
   if (!await entity.authorizationChecker.canUpdate(ctx)) {
-    console.error('Cannot update!');
+    console.log('cannot update', entity);
     throw new UnauthorizedError();
   }
 
@@ -68,6 +70,7 @@ export async function assertCanDelete<T extends IAuthorizable>(entity: T | Array
   }
 
   if (!await entity.authorizationChecker.canDelete(ctx)) {
+    console.log('cannot delete', entity);
     throw new UnauthorizedError();
   }
 

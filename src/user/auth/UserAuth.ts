@@ -1,24 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { IAuthorizationChecker } from '../../authorization/IAuthorizationChecker';
-import { IRequestContext } from '../../shared/IRequestContext';
-import { UserRole } from '../enums/UserRole';
-import { User } from '../models/User';
+import {IAuthorizationChecker} from '../../authorization/IAuthorizationChecker';
+import {IRequestContext} from '../../shared/IRequestContext';
+import {UserRole} from '../enums/UserRole';
+import {User} from '../models/User';
 
 export class UserAuth implements IAuthorizationChecker {
   public constructor(private user: User) {
   }
 
   public async canRead(ctx: IRequestContext, field?: string) {
-    return true;
+    return ctx.user?.role === UserRole.ADMIN || ctx.user?.id === this.user.id;
   }
 
   public async canManage(ctx: IRequestContext) {
-    const { auth } = ctx;
-    if (!auth) {
+    const { user } = ctx;
+    if (!user) {
       return false;
     }
 
-    if (auth.user.role === UserRole.ADMIN) {
+    if (user.role === UserRole.ADMIN) {
       return true;
     }
 

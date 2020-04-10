@@ -3,8 +3,46 @@
 import { asPromise } from '../../../shared/as-promise';
 import { IRequestContext } from '../../../shared/IRequestContext';
 import { User } from '../../../user/models/User';
+import { FacebookUserNestedInput } from '../../../facebook-user/inputs/FacebookUserNestedInput';
+import { EmailPasswordUserNestedInput } from '../../../email-password-user/inputs/EmailPasswordUserNestedInput';
 import { FileNestedInput } from '../../../file/inputs/FileNestedInput';
+import { FacebookUser } from '../../../facebook-user/models/FacebookUser';
+import { EmailPasswordUser } from '../../../email-password-user/models/EmailPasswordUser';
 import { File } from '../../../file/models/File';
+
+export async function updateFacebookUserRelation(user: User, facebookUser: FacebookUserNestedInput | null | undefined, context: IRequestContext) {
+  const existingFacebookUser = await user.facebookUser;
+
+  if (facebookUser === null) {
+    user.facebookUser = Promise.resolve(null);
+  } else if (facebookUser === undefined) {
+    // do nothing
+  } else if (facebookUser.id) {
+    const facebookUserModel = await context.em.findOneOrFail(FacebookUser, facebookUser.id);
+    user.facebookUser = asPromise(await facebookUserModel.update(facebookUser, context));
+  } else if (existingFacebookUser) {
+    await existingFacebookUser.update(facebookUser, context);
+  } else {
+    user.facebookUser = asPromise(await new FacebookUser().update(facebookUser, context));
+  }
+}
+
+export async function updateEmailPasswordUserRelation(user: User, emailPasswordUser: EmailPasswordUserNestedInput | null | undefined, context: IRequestContext) {
+  const existingEmailPasswordUser = await user.emailPasswordUser;
+
+  if (emailPasswordUser === null) {
+    user.emailPasswordUser = Promise.resolve(null);
+  } else if (emailPasswordUser === undefined) {
+    // do nothing
+  } else if (emailPasswordUser.id) {
+    const emailPasswordUserModel = await context.em.findOneOrFail(EmailPasswordUser, emailPasswordUser.id);
+    user.emailPasswordUser = asPromise(await emailPasswordUserModel.update(emailPasswordUser, context));
+  } else if (existingEmailPasswordUser) {
+    await existingEmailPasswordUser.update(emailPasswordUser, context);
+  } else {
+    user.emailPasswordUser = asPromise(await new EmailPasswordUser().update(emailPasswordUser, context));
+  }
+}
 
 export async function updateProfileImageRelation(user: User, profileImage: FileNestedInput | null | undefined, context: IRequestContext) {
   const existingProfileImage = await user.profileImage;

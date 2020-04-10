@@ -1,4 +1,3 @@
-// tslint:disable no-console
 import appRoot from 'app-root-path';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -10,12 +9,13 @@ import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
 import env from 'env-var';
 
-import { connectionOptions } from '../../ormconfig/ormconfig';
+import { connectionOptions } from './ormconfig';
 import { AuthorizationMiddleware } from '../authorization/AuthorizationMiddleware';
 import { createGraphqlContext } from './create-graphql-context';
 import { formatError, ravenMiddleware } from './format-error';
 import { isDevEnv } from './is-dev-env';
 import { createGraphqlFile, createSchemaJsonFile } from './server-helpers';
+import { authenticationMiddleware } from '../authentication/middlewares/authentication-middleware';
 
 const NODE_ENV = env.get('NODE_ENV').required().asString();
 const PORT = env.get('PORT', '5001').asIntPositive();
@@ -31,7 +31,7 @@ Raven.config(SENTRY_DSN, {
 async function bootstrap() {
   const schema = await buildSchema({
     resolvers: [
-      appRoot.resolve('src/*/resolvers/*Resolver.ts'),
+      appRoot.resolve('build/*/resolvers/*Resolver.js'),
     ],
     globalMiddlewares: [AuthorizationMiddleware],
     validate: false,
@@ -65,6 +65,7 @@ async function bootstrap() {
 
   app.use(cookieParser());
   app.use(bodyParser.json({ limit: '5mb' }));
+  app.use(authenticationMiddleware);
   app.use(express.static(appRoot.resolve('public')));
   app.use(Raven.requestHandler());
 
@@ -74,8 +75,8 @@ async function bootstrap() {
 
   await createConnection(connectionOptions);
 
-  const initializers = glob.sync(appRoot.resolve('src/*/*-controller.ts'))
-    .map(modulePath => require(modulePath)) // tslint:disable-line:non-literal-require
+  const initializers = glob.sync(appRoot.resolve('build/*/*-controller.js'))
+    .map(modulePath => require(modulePath))
     .map(module => module.default)
     .filter(initializer => initializer);
 

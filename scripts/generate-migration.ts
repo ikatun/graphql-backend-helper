@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import { sync as globSync } from 'glob';
 import { createInterface } from 'readline';
 
-import { connectionOptions } from '../ormconfig/ormconfig';
+import { connectionOptions } from '../src/server/ormconfig';
 
 const stdio = createInterface({
   input: process.stdin,
@@ -23,7 +23,7 @@ stdio.question('Migration name: ', migrationName => {
 
   for (const file of globSync(migrations[0])) {
     const content = readFileSync(file, 'utf8');
-    if (content.indexOf('/* eslint:disable */') > -1) {
+    if (content.indexOf('/* eslint-disable */') > -1) {
       continue;
     }
     writeFileSync(file, `/* eslint-disable */\n${content}`, { encoding: 'utf8' });

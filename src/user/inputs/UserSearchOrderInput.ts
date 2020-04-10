@@ -15,16 +15,13 @@ export class UserSearchOrderInput {
   public id?: SortOrderEnum;
 
   @Field(() => SortOrderEnum, {"nullable":true})
-  public email?: SortOrderEnum | null;
+  public name?: SortOrderEnum | null;
 
   @Field(() => SortOrderEnum, {"nullable":true})
-  public password?: SortOrderEnum | null;
+  public facebookUser?: SortOrderEnum | null;
 
   @Field(() => SortOrderEnum, {"nullable":true})
-  public firstName?: SortOrderEnum | null;
-
-  @Field(() => SortOrderEnum, {"nullable":true})
-  public lastName?: SortOrderEnum | null;
+  public emailPasswordUser?: SortOrderEnum | null;
 
   @Field(() => SortOrderEnum, {"nullable":true})
   public profileImage?: SortOrderEnum | null;

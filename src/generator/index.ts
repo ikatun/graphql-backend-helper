@@ -62,7 +62,6 @@ async function writeToFile(data: string, dir: string, name: string, overwrite: b
   const filePath = path.join(dirName, name);
 
   if (!overwrite && fs.existsSync(filePath)) {
-    // tslint:disable-next-line no-console
     console.info(`skipping ${name} because it already exists`);
 
     return;

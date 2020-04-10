@@ -17,14 +17,10 @@ export async function ravenMiddleware(resolve, root, args, context: IRequestCont
     return await resolve(root, args, context, info);
   } catch (e) {
     if (!e.isValidationError) {
-      const { request } = context;
-      let user: string | object = 'Not logged in';
-      if (context.auth) {
-        user = context.auth.user;
-      }
+      const { request, user } = context;
       setContext({
         request,
-        user,
+        user: user ? { id: user.id } : 'Not logged in',
       });
       captureException(e);
     }

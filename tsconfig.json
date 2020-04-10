@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2018",
     "module": "commonjs",
-    "lib": ["es2017", "es7", "es6", "dom"],
     "declaration": true,
     "strict": true,
     "esModuleInterop": true,
@@ -12,8 +11,13 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "strictPropertyInitialization": false,
+    "incremental": true,
+    "outDir": "./build",
+    "rootDir": "./src",
+    "tsBuildInfoFile": "./build/tsconfig.tsbuildinfo",
+    "inlineSources": true,
+    "sourceMap": true
   },
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["./src"],
+  "exclude": ["./src/generator"]
 }

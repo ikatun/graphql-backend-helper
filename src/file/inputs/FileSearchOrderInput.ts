@@ -18,9 +18,6 @@ export class FileSearchOrderInput {
   public contentBase64?: SortOrderEnum | null;
 
   @Field(() => SortOrderEnum, {"nullable":true})
-  public post?: SortOrderEnum | null;
-
-  @Field(() => SortOrderEnum, {"nullable":true})
   public user?: SortOrderEnum | null;
 
   // <keep-methods>

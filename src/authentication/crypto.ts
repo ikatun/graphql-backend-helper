@@ -1,10 +1,13 @@
 import { compare, hash } from 'bcryptjs';
-import { sign } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
 import env from 'env-var';
+import Cryptr from 'cryptr';
 
-import { User } from '../user/models/User';
+import { ITokenStructure } from '../authorization/ITokenStructure';
 
 const JWT_SECRET = env.get('JWT_SECRET').required().asString();
+
+const cryptr = new Cryptr(JWT_SECRET);
 
 export async function hashPassword(password: string): Promise<string> {
   return hash(password, 7);
@@ -16,16 +19,18 @@ export async function verifyPassword(plainPassword: string, hashedPassword?: str
   return compare(plainPassword, hashedPassword);
 }
 
-function signToken(input: object) {
+export function signToken(input: ITokenStructure) {
   return sign(input, JWT_SECRET);
 }
 
-export function signUserToken(user: User) {
-  return signToken({
-    user: {
-      id: user.id,
-      email: user.email,
-      role: user.role,
-    },
-  });
+export function verifyToken(token: string) {
+  return verify(token, JWT_SECRET) as ITokenStructure;
+}
+
+export function encryptString(value: string) {
+  return cryptr.encrypt(value);
+}
+
+export function decryptString(value: string) {
+  return cryptr.decrypt(value);
 }

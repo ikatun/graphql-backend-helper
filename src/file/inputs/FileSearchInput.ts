@@ -18,9 +18,6 @@ export class FileSearchInput {
   public contentBase64?: string | null;
 
   @Field(() => ReferenceSearchInput, {"nullable":true})
-  public post?: ReferenceSearchInput | null;
-
-  @Field(() => ReferenceSearchInput, {"nullable":true})
   public user?: ReferenceSearchInput | null;
 
   // <keep-methods>

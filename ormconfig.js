@@ -5,4 +5,4 @@ require("ts-node").register({
 require("dotenv/config");
 require("reflect-metadata");
 
-module.exports = require("./ormconfig/ormconfig.ts").connectionOptions;
+module.exports = require("./src/server/ormconfig").connectionOptions;

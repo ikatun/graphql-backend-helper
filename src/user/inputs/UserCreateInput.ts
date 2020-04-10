@@ -4,6 +4,8 @@ import { Field, ID, InputType } from 'type-graphql';
 
 import { EntityId, EntityIdScalar } from '../../shared/EntityId';
 import { UserRole } from '../enums/UserRole';
+import { FacebookUserNestedInput } from '../../facebook-user/inputs/FacebookUserNestedInput'
+import { EmailPasswordUserNestedInput } from '../../email-password-user/inputs/EmailPasswordUserNestedInput'
 import { FileNestedInput } from '../../file/inputs/FileNestedInput'
 
 // <keep-imports>
@@ -12,16 +14,13 @@ import { FileNestedInput } from '../../file/inputs/FileNestedInput'
 @InputType()
 export class UserCreateInput {
   @Field(() => String, )
-  public email: string;
+  public name: string;
 
-  @Field(() => String, )
-  public password: string;
+  @Field(() => FacebookUserNestedInput, {"nullable":true})
+  public facebookUser?: FacebookUserNestedInput | null;
 
-  @Field(() => String, )
-  public firstName: string;
-
-  @Field(() => String, )
-  public lastName: string;
+  @Field(() => EmailPasswordUserNestedInput, {"nullable":true})
+  public emailPasswordUser?: EmailPasswordUserNestedInput | null;
 
   @Field(() => FileNestedInput, {"nullable":true})
   public profileImage?: FileNestedInput | null;

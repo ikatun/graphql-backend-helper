@@ -4,7 +4,6 @@ import { Field, ID, InputType } from 'type-graphql';
 
 import { EntityId, EntityIdScalar } from '../../shared/EntityId';
 
-import { PostNestedInput } from '../../post/inputs/PostNestedInput'
 import { UserNestedInput } from '../../user/inputs/UserNestedInput'
 
 // <keep-imports>
@@ -17,9 +16,6 @@ export class FileNestedInput {
 
   @Field(() => String, {"nullable":true})
   public contentBase64?: string | null;
-
-  @Field(() => PostNestedInput, {"nullable":true})
-  public post?: PostNestedInput | null;
 
   @Field(() => UserNestedInput, {"nullable":true})
   public user?: UserNestedInput | null;

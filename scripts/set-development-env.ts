@@ -9,7 +9,6 @@ const rlp = readline.createInterface({
   terminal: true,
 });
 
-// tslint:disable-next-line
 const randomPort = () => Math.floor((Math.random() * 58000) + 1100);
 
 (async () => {

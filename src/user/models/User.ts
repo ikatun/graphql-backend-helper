@@ -3,7 +3,8 @@
 import { Field, ID, ObjectType } from 'type-graphql';
 import { Column, JoinColumn, Entity, OneToOne, ManyToOne, OneToMany, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-import { Post } from '../../post/models/Post';
+import { FacebookUser } from '../../facebook-user/models/FacebookUser';
+import { EmailPasswordUser } from '../../email-password-user/models/EmailPasswordUser';
 import { File } from '../../file/models/File';
 import { UserRole } from '../enums/UserRole';
 import * as auth from '../../authorization/auth-checkers';
@@ -18,7 +19,7 @@ import { getInputOperationType } from '../../shared/get-input-operation-type';
 import { noChange } from '../../shared/no-change';
 import { asPromise } from '../../shared/as-promise';
 
-import { updateProfileImageRelation } from './update-operations/user-update-operations';
+import { updateFacebookUserRelation,updateEmailPasswordUserRelation,updateProfileImageRelation } from './update-operations/user-update-operations';
 
 // <keep-imports>
 import {hashPassword, verifyPassword} from '../../authentication/crypto';
@@ -35,45 +36,28 @@ export class User implements IAuthorizable {
 
   public authorizationChecker = new UserAuth(this);
 
-  @Field(() => String, )
-  @Column({"type":"varchar",
-    // <custom-column-args>
-    unique: true,
-    // </custom-column-args>
-  })
-  public email: string;
-
-  
-  @Column({"type":"varchar",
-    // <custom-column-args>
-    // </custom-column-args>
-  })
-  public passwordHash: string;
-
-  @Field(() => String, )
-  @Column({
-    // <custom-column-args>
-    // </custom-column-args>
-  })
-  public firstName: string;
-
-  @Field(() => String, )
-  @Column({
-    // <custom-column-args>
-    // </custom-column-args>
-  })
-  public lastName: string;
-
   
   @Column({"enum":UserRole,
     // <custom-column-args>
+    default: UserRole.USER,
     // </custom-column-args>
   })
   public role: UserRole;
 
-  @OneToMany(() => Post, (post) => post.author)
-  @Field(() => [Post])
-  public posts: Promise<Array<Post>>;
+  @Field(() => String, )
+  @Column({
+    // <custom-column-args>
+    // </custom-column-args>
+  })
+  public name: string;
+
+  @OneToOne(() => FacebookUser, (facebookUser) => facebookUser.user)
+  @Field(() => FacebookUser , {"nullable":true})
+  public facebookUser: Promise<FacebookUser | undefined | null>;
+
+  @OneToOne(() => EmailPasswordUser, (emailPasswordUser) => emailPasswordUser.user)
+  @Field(() => EmailPasswordUser , {"nullable":true})
+  public emailPasswordUser: Promise<EmailPasswordUser | undefined | null>;
 
   @OneToOne(() => File, (file) => file.user)
   @Field(() => File , {"nullable":true})
@@ -88,7 +72,7 @@ export class User implements IAuthorizable {
   updatedAt: Date;
 
   public async update(input: UserCreateInput | UserEditInput | UserNestedInput, context: IRequestContext) {
-    const { profileImage, ...data } = input;
+    const { facebookUser, emailPasswordUser, profileImage, ...data } = input;
     if (noChange(input)) {
       return this;
     }
@@ -97,16 +81,15 @@ export class User implements IAuthorizable {
     }
     Object.assign(this, data);
 
+    await updateFacebookUserRelation(this, facebookUser, context);
+    await updateEmailPasswordUserRelation(this, emailPasswordUser, context);
     await updateProfileImageRelation(this, profileImage, context);
 
     context.modelsToSave.push(this);
 
     // <keep-update-code>
-    if (this.role === undefined) {
+    if (await this.role === undefined) {
       this.role = UserRole.USER;
-    }
-    if (this.passwordHash === undefined && input.password) {
-      this.passwordHash = await hashPassword(input.password);
     }
     // </keep-update-code>
     await auth.assertCanPersist(this, context);
@@ -115,8 +98,5 @@ export class User implements IAuthorizable {
   }
 
   // <keep-methods>
-  public async passwordMatches(password: string) {
-    return verifyPassword(password, this.passwordHash);
-  }
   // </keep-methods>
 }

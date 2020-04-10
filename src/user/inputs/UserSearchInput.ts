@@ -15,16 +15,13 @@ export class UserSearchInput {
   public id?: EntityId;
 
   @Field(() => String, {"nullable":true})
-  public email?: string | null;
+  public name?: string | null;
 
-  @Field(() => String, {"nullable":true})
-  public password?: string | null;
+  @Field(() => ReferenceSearchInput, {"nullable":true})
+  public facebookUser?: ReferenceSearchInput | null;
 
-  @Field(() => String, {"nullable":true})
-  public firstName?: string | null;
-
-  @Field(() => String, {"nullable":true})
-  public lastName?: string | null;
+  @Field(() => ReferenceSearchInput, {"nullable":true})
+  public emailPasswordUser?: ReferenceSearchInput | null;
 
   @Field(() => ReferenceSearchInput, {"nullable":true})
   public profileImage?: ReferenceSearchInput | null;

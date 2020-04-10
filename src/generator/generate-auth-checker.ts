@@ -20,12 +20,12 @@ export class ${name}Auth implements IAuthorizationChecker {
   }
 
   public async canManage(ctx: IRequestContext) {
-    const { auth } = ctx;
-    if (!auth) {
+    const { user } = ctx;
+    if (!user) {
       return false;
     }
 
-    if (auth.user.role === UserRole.ADMIN) {
+    if (user.role === UserRole.ADMIN) {
       return true;
     }
 
