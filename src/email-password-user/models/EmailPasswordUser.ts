@@ -42,14 +42,14 @@ export class EmailPasswordUser implements IAuthorizable {
   })
   public email: string;
 
-
+  
   @Column({
     // <custom-column-args>
     // </custom-column-args>
   })
   public passwordHash: string;
 
-
+  
   @Column({"nullable":true,"type":"text",
     // <custom-column-args>
     // </custom-column-args>

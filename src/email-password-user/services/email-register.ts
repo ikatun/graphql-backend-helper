@@ -10,7 +10,7 @@ import {ValidationError} from "../../server/validation-error";
 import {hashPassword} from "../../authentication/crypto";
 import {sendEmail} from "../../email/services/send-email";
 
-const EMAIL_VERIFICATION_REQUIRED = env.get('EMAIL_VERIFICATION_REQUIRED').required().asString();
+const EMAIL_VERIFICATION_REQUIRED = env.get('EMAIL_VERIFICATION_REQUIRED').required().asBool();
 
 export async function emailRegister(data: EmailRegisterInput, em: EntityManager) {
   const { email, password, name } = data;
