@@ -2,6 +2,7 @@ import 'dotenv/config'
 import 'reflect-metadata';
 
 import env from 'env-var';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 const DATABASE_TYPE = env.get('DATABASE_TYPE', 'postgres').asString();
 const DATABASE_SYNCHRONIZE = env.get('DATABASE_SYNCHRONIZE', 'false').asBoolStrict();
@@ -18,4 +19,5 @@ export const connectionOptions: any = {
     migrationsDir: 'build/migrations',
   },
   url: DATABASE_URL,
+  namingStrategy: new SnakeNamingStrategy(),
 };
