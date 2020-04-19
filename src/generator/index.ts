@@ -5,7 +5,7 @@ import makeDir from 'make-dir';
 import path from 'path';
 import appRoot from 'app-root-path';
 
-import _ = require('lodash');
+import _ from 'lodash';
 import { generateAuthChecker } from './generate-auth-checker';
 import { generateCrudResolver } from './generate-crud-resolver';
 import { generateEnum } from './generate-enum';
