@@ -30,7 +30,7 @@
     "@types/lodash": "^4.14.108",
     "@types/node": "^12.11.6",
     "app-root-path": "^2.2.1",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.7.1",
     "clean-deep": "^3.0.2",
